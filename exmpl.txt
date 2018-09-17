@@ -204,3 +204,5 @@ RUN /mnt/build/settings/runappsettings.sh
 cd <каталог, где лежит Dockerfile>
 docker build -t <имя нового образа> .
 
+https://docs.docker.com/samples/library/erlang/
+https://github.com/erlang/docker-erlang
