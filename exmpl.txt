@@ -1,0 +1,176 @@
+open ports 4505 4506
+
+yum -y install mc
+
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+sudo yum install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm 
+
+sudo yum install salt-master salt-ssh salt-syndic salt-cloud salt-api
+
+sudo yum install salt-minion
+
+sudo systemctl enable salt-master
+sudo systemctl restart salt-master
+sudo systemctl status salt-master
+
+sudo systemctl enable salt-minion
+sudo systemctl restart salt-minion
+sudo systemctl status salt-minion
+
+
+sudo vi /etc/hosts
+172.31.23.93   salt
+
+#sudo vi /etc/salt/minion
+#master: 172.31.31.80
+
+#master.pem:  eb:e7:9f:27:5a:4d:22:0f:13:23:cc:92:e0:48:e2:48
+
+
+#master.pub:  03:b2:f4:bb:00:7a:f3:29:6e:98:70:9a:01:d1:fc:d7
+
+sudo yum install git
+
+
+sudo yum install wget
+
+
+https://stackoverflow.com/questions/50156248/installing-up-to-date-version-of-erlang-on-rhel7
+
+sudo vi /etc/yum.repos.d/erlang-solutions.repo
+[erlang-solutions]
+name=CentOS $releasever - $basearch - Erlang Solutions
+baseurl=https://packages.erlang-solutions.com/rpm/centos/7/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.erlang-solutions.com/rpm/erlang_solutions.asc
+
+
+sudo yum install rebar
+
+ wget https://s3.amazonaws.com/rebar3/rebar3 && chmod +x rebar3
+
+sudo cp rebar3 /usr/sbin
+
+git clone https://github.com/rbkmoney/test-devops-DrOgend.git
+
+
+
+make compile
+make start
+
+mkdir /home/ec2-user/test-devops-DrOgend/salt/
+
+ file_roots:
+   base:
+     - /home/ec2-user/test-devops-DrOgend/salt/
+
+
+docker.sls
+yum-utils:
+  pkg.installed
+
+device-mapper-persistent-data:
+  pkg.installed
+
+lvm2:
+  pkg.installed
+
+container-selinux:
+  pkg.latest
+
+docker:
+  pkgrepo.managed:
+    - humanname: docker-ce
+    - baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    - gpgcheck: 1
+    - gpgkey: https://download.docker.com/linux/centos/gpg
+    - enabled: 1
+
+mypkgs:
+  pkg.installed:
+    - sources:
+      - container-selinux: http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.68-1.el7.noarch.rpm
+
+docker-ce:
+  pkg.installed
+
+
+
+ sudo pip install pip==8.1.1
+
+sudo salt '*' pip.install docker
+
+sudo salt '*' state.highstate
+
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+
+erl -pa _build/default/lib/cowboy/ebin/ -pa _build/default/lib/cowlib/ebin/ -pa _build/default/lib/ranch/ebin/ -pa _build/default/lib/websocket_chat/ebin/ -pa _build/default/lib/jsx/ebin/ -s websocket_chat_app fast_start -noshell -detached
+
+
+sudo salt '*' pip.install docker
+
+------------------------------------------------
+
+[ec2-user@ip-172-31-23-93 salt]$ cat top.sls
+base:
+  '*':
+    - docker_install_n_run
+
+------------------------------------------------
+
+[ec2-user@ip-172-31-23-93 salt]$ cat top.sls
+base:
+  '*':
+    - docker_install_n_run
+[ec2-user@ip-172-31-23-93 salt]$ cat docker_install_n_run.sls
+yum-utils:
+  pkg.installed
+
+device-mapper-persistent-data:
+  pkg.installed
+
+lvm2:
+  pkg.installed
+
+container-selinux:
+  pkg.latest
+
+docker_repo:
+  pkgrepo.managed:
+    - humanname: docker-ce
+    - baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    - gpgcheck: 1
+    - gpgkey: https://download.docker.com/linux/centos/gpg
+    - enabled: 1
+
+mypkgs:
+  pkg.installed:
+    - sources:
+      - container-selinux: http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.68-1.el7.noarch.rpm
+
+docker-ce:
+  pkg.installed
+
+docker:
+  service.running:
+    - enable: True
+
+python2-pip_pkg:
+  pkg.installed:
+    - name: python2-pip
+
+
+python-docker_pkg:
+  pkg.installed:
+    - name: docker
+
+
+hello-world:
+  docker_container.running:
+    - image: hello-world
+
+
+
