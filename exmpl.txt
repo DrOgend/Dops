@@ -174,3 +174,33 @@ hello-world:
 
 
 
+FROM docker.moscow.alfaintra.net/redhat/rhel7/rhel:7.4-120
+
+RUN mkdir -p /tmp/distr
+RUN mkdir /WAS
+COPY epel.repo /etc/yum.repos.d
+COPY local.repo /etc/yum.repos.d
+COPY redhat.repo /etc/yum.repos.d
+COPY server1 /etc/rc.d/init.d
+COPY filebeat-6.3.0-linux-x86_64 /WAS/filebeat-6.3.0-linux-x86_64
+
+RUN yum install -y wget unzip tar mc
+
+RUN groupadd was && useradd -g was -m wasadm && echo -e "wasadm\nwasadm" | passwd wasadm
+COPY inst_WAS9008_BASE_linux.sh /tmp/distr
+RUN /tmp/distr/inst_WAS9008_BASE_linux.sh
+ENV PATH /WAS/WebSphere/AppServer/bin:$PATH
+RUN manageprofiles.sh -create -templatePath /WAS/WebSphere/AppServer/profileTemplates/default -hostName localhost
+
+EXPOSE 9060 9080
+
+RUN mkdir -p /mnt/build
+COPY settings /mnt/build/settings
+RUN /mnt/build/settings/runjvmsettings.sh
+RUN /mnt/build/settings/runappsettings.sh
+
+
+Сборка нового образа:
+cd <каталог, где лежит Dockerfile>
+docker build -t <имя нового образа> .
+
