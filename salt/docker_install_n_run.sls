@@ -51,7 +51,20 @@ install_pip-docker:
     - name: docker
     - upgrade: True
 
-hello-world:
+salt-minion:
+  service.running:
+    - enable: True
+
+docker-copy-image:
+  cp.get_file:
+    - path: websocket_chat_1_5.tar
+    - dest: /home/ec2-user
+
+docker-load-image:
+  docker_image.present:
+    - load: salt://websocket_chat_1_5.tar
+
+websocket_chat:1.5:
   docker_container.run:
-    - image: hello-world
+    - image: websocket_chat:1.5
     - replace: True
