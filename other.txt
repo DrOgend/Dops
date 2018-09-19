@@ -1,0 +1,90 @@
+
+
+https://github.com/rbkmoney/test-devops-DrOgend.git
+
+
+
+vi doc*le
+
+rebar3 as prod tar
+
+
+sudo docker build -t websocket_chat:1.5 .
+sudo docker run -d websocket_chat:1.5 
+sudo docker run -it --rm --entrypoint=/bin/bash websocket_chat:1.5
+sudo docker ps -a
+
+cat /etc/*-release
+
+cat /proc/version
+
+cd lib/crypto-4.3.2/priv/lib/
+
+[load_failed,"Failed to load NIF library /buildroot/lib/crypto-4.3.2/priv/lib/crypto: 'libcrypto.so.10: cannot open shared object file: No such file or directory'","OpenSSL might not be installed on this system.\n"]
+"Unable to load crypto library. Failed with error:~n\"~p, ~s\"~n~s"
+{error_logger,error_msg}
+
+
+FROM erlang:21
+
+# Download the Erlang/OTP source
+RUN mkdir /buildroot
+
+COPY _build/prod/rel/websocket_chat/websocket_chat-1.5.0.tar.gz /buildroot
+
+WORKDIR /buildroot
+
+RUN tar -zxf websocket_chat-1.5.0.tar.gz
+
+EXPOSE 8080 8080
+
+CMD ["/buildroot/bin/websocket_chat-1.5.0", "foreground"]
+
+#RH
+ ldd /usr/lib64/libcrypto.so.10
+
+#DEB
+root@0e3edfb96d42:/buildroot# cat /etc/ld.so.conf.d/*.conf
+# libc default configuration
+/usr/local/lib
+# Multiarch support
+/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu
+
+
+
+[ec2-user@ip-172-31-23-93 lib]$ ldd crypto.so
+        linux-vdso.so.1 =>  (0x00007ffca7901000)
+        libcrypto.so.10 => /usr/lib64/libcrypto.so.10 (0x00007fdb1c8e9000)
+        libc.so.6 => /usr/lib64/libc.so.6 (0x00007fdb1c51c000)
+        libdl.so.2 => /usr/lib64/libdl.so.2 (0x00007fdb1c318000)
+        libz.so.1 => /usr/lib64/libz.so.1 (0x00007fdb1c102000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fdb1cf5d000)
+
+
+root@58b099c6acd7:/buildroot/lib/crypto-4.3.2/priv/lib# ldd crypto.so
+        linux-vdso.so.1 (0x00007ffc92f78000)
+        libcrypto.so.10 => not found
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f5cfd822000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f5cfdde0000)
+
+
+ldd crypto.so
+
+
+
+libssl-dev is already the newest version (1.1.0f-3+deb9u2).
+libssl1.0.2 is already the newest version (1.0.2l-2+deb9u3).
+libssl1.0.2 set to manually installed.
+libssl1.1 is already the newest version (1.1.0f-3+deb9u2).
+libssl1.1 set to manually installed.
+
+
+COPY include /buildroot  
+COPY Makefile /buildroot  
+COPY priv /buildroot  
+COPY rebar.config /buildroot  
+COPY rebar.lock /buildroot  
+COPY src /buildroot
+
+
