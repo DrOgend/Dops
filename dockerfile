@@ -16,6 +16,6 @@ RUN rebar3 as prod tar
 
 EXPOSE 8080 8080
 
-CMD ["/buildroot/_build/prod/rel/dops_test/bin/websocket_chat-1.5.0", "foreground"]
+CMD ["/buildroot/_build/prod/rel/websocket_chat/bin/websocket_chat-1.5.0", "foreground"]
 
 
