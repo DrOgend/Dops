@@ -55,16 +55,14 @@ salt-minion:
   service.running:
     - enable: True
 
-docker-copy-image:
-  cp.get_file:
-    - path: websocket_chat_1_5.tar
-    - dest: /home/ec2-user
-
-docker-load-image:
+websocket_chat:
   docker_image.present:
     - load: salt://websocket_chat_1_5.tar
+    - tag: websocket_chat
 
-websocket_chat:1.5:
-  docker_container.run:
+run_websocket_chat:
+  docker_container.running:
     - image: websocket_chat:1.5
     - replace: True
+    - port_bindings:
+      - 8080:8080
