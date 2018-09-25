@@ -7,9 +7,6 @@ device-mapper-persistent-data:
 lvm2:
   pkg.installed
 
-container-selinux:
-  pkg.latest
-
 docker_repo:
   pkgrepo.managed:
     - humanname: docker-ce
@@ -27,17 +24,11 @@ salt_repo:
               https://repo.saltstack.com/yum/redhat/$releasever/$basearch/latest/base/RPM-GPG-KEY-CentOS-7
     - enabled: 1
 
-mypkgs:
+install_selinux4docker-ce:
   pkg.installed:
+    - skip_verify: True
     - sources:
       - container-selinux: http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.68-1.el7.noarch.rpm
-
-docker-ce:
-  pkg.installed
-
-docker:
-  service.running:
-    - enable: True
 
 python:
   pkg.latest
@@ -50,8 +41,17 @@ install_pip-docker:
   pip.installed:
     - name: docker
     - upgrade: True
+    - force_reinstall: True
+    - reload_modules: True
+
+docker-ce:
+  pkg.installed
 
 salt-minion:
+  service.running:
+    - enable: True
+
+docker:
   service.running:
     - enable: True
 
